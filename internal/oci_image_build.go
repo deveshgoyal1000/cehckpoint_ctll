@@ -116,7 +116,10 @@ func (ic *ImageBuilder) getCheckpointAnnotations() (map[string]string, error) {
 		return nil, err
 	}
 
-	info.containerInfo, err = getContainerInfo(info.specDump, info.configDump)
+	task := Task{
+		OutputDir: ic.checkpointPath,
+	}
+	info.containerInfo, err = getContainerInfo(info.specDump, info.configDump, task)
 	if err != nil {
 		return nil, err
 	}

@@ -79,6 +79,25 @@ type KubernetesContainerCheckpointMetadata struct {
 	Checkpoints   []KubernetesCheckpoint `json:"checkpoints"`
 }
 
+// PodmanNetworkStatus represents the network status information for Podman containers
+type PodmanNetworkStatus struct {
+	Podman struct {
+		Interfaces map[string]PodmanInterface `json:"interfaces"`
+	} `json:"podman"`
+}
+
+// PodmanInterface represents network interface information for Podman containers
+type PodmanInterface struct {
+	Subnets    []PodmanSubnet `json:"subnets"`
+	MacAddress string         `json:"mac_address"`
+}
+
+// PodmanSubnet represents subnet information for a Podman network interface
+type PodmanSubnet struct {
+	IPNet   string `json:"ipnet"`
+	Gateway string `json:"gateway"`
+}
+
 func ReadContainerCheckpointSpecDump(checkpointDirectory string) (*spec.Spec, string, error) {
 	var specDump spec.Spec
 	specDumpFile, err := ReadJSONFile(&specDump, checkpointDirectory, SpecDumpFile)
@@ -105,6 +124,12 @@ func ReadContainerCheckpointStatusFile(checkpointDirectory string) (*ContainerdS
 	statusFile, err := ReadJSONFile(&containerdStatus, checkpointDirectory, StatusFile)
 
 	return &containerdStatus, statusFile, err
+}
+
+func ReadPodmanNetworkStatus(checkpointDirectory string) (*PodmanNetworkStatus, string, error) {
+	var networkStatus PodmanNetworkStatus
+	networkStatusFile, err := ReadJSONFile(&networkStatus, checkpointDirectory, NetworkStatusFile)
+	return &networkStatus, networkStatusFile, err
 }
 
 // WriteJSONFile marshalls and writes the given data to a JSON file

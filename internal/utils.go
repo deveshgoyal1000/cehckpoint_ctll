@@ -32,9 +32,10 @@ func FormatTime(microseconds uint32) string {
 	return fmt.Sprintf("%s %s", formatted, unit)
 }
 
+// Task represents a checkpoint operation task
 type Task struct {
-	CheckpointFilePath string
 	OutputDir          string
+	CheckpointFilePath string
 }
 
 func CreateTasks(args []string, requiredFiles []string) ([]Task, error) {

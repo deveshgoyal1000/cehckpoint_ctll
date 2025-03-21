@@ -89,7 +89,11 @@ func RenderTreeView(tasks []Task) error {
 			addMountsToTree(tree, info.specDump)
 		}
 
-		fmt.Printf("\nDisplaying container checkpoint tree view from %s\n\n", task.CheckpointFilePath)
+		if len(tasks) == 1 {
+			fmt.Printf("\nDisplaying container checkpoint tree from %s\n\n", task.OutputDir)
+		} else {
+			fmt.Printf("\nDisplaying container checkpoint tree view from %s\n\n", task.CheckpointFilePath)
+		}
 		fmt.Println(tree.String())
 	}
 

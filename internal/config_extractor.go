@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 package internal
 
 import (
@@ -6,6 +8,7 @@ import (
 	"time"
 
 	metadata "github.com/checkpoint-restore/checkpointctl/lib"
+	spec "github.com/opencontainers/runtime-spec/specs-go"
 )
 
 type ChkptConfig struct {
@@ -39,7 +42,10 @@ func ExtractConfigDump(checkpointPath string) (*ChkptConfig, error) {
 		return nil, err
 	}
 
-	info.containerInfo, err = getContainerInfo(info.specDump, info.configDump)
+	task := Task{
+		OutputDir: tempDir,
+	}
+	info.containerInfo, err = getContainerInfo(info.specDump, info.configDump, task)
 	if err != nil {
 		return nil, err
 	}
@@ -50,4 +56,8 @@ func ExtractConfigDump(checkpointPath string) (*ChkptConfig, error) {
 		ContainerManager: info.containerInfo.Engine,
 		Timestamp:        info.configDump.CheckpointedAt,
 	}, nil
+}
+
+func GetCheckpointInfo(specDump *spec.Spec, containerConfig *metadata.ContainerConfig, task Task) (*containerInfo, error) {
+	return getContainerInfo(specDump, containerConfig, task)
 }
